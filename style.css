@@ -1,0 +1,98 @@
+#top-buffer {
+  height: 100px;
+}
+
+#turn {
+  font-family: sans-serif;
+  font-size: 25px;
+  margin-top: 25px;
+}
+
+#container {
+  margin: 0 auto;
+  width: 500px;
+  height: 350px;
+}
+
+.button-container {
+  width: 250px;
+  margin: 0 auto;
+}
+
+#reset {
+  margin: 0 auto;
+  text-align: center;
+  height: 40px;
+  width: 100px;
+  font-style: bold;
+  font-size: 25px;
+}
+
+.column {
+  float: left;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  text-align: center;
+}
+
+.square {
+  border: solid black;
+  width: 100px;
+  height: 100px;
+  padding: 0 0 15 0;
+  margin: 0;
+  font-size: 100px;
+  text-align: center;
+  font-family: sans-serif;
+  font-style: bold;
+}
+
+.player-x {
+  background-color: #F56E85;
+  color: #F71111;
+}
+
+.player-o {
+  background-color: #1114F0;
+  color: #5CACF2;
+}
+
+#one {
+  border-width: 5px 5px 5px 5px;
+  margin: 0 0 0 5px;
+}
+
+#two {
+  border-width: 0 5px 5px 5px;
+  margin: 0 0 0 5px;
+}
+
+#three {
+  border-width: 0px 5px 5px 5px;
+  margin: 0 0 0 5px;
+}
+
+#four {
+  border-width: 5px 5px 5px 0;
+}
+
+#five {
+  border-width: 0 5px 5px 0;
+}
+
+#six {
+  border-width: 0 5px 5px 0;
+}
+
+#seven {
+  border-width: 5px 5px 5px 0;
+}
+
+#eight {
+  border-width: 0 5px 5px 0;
+}
+
+#nine {
+  border-width: 0 5px 5px 0;
+}
