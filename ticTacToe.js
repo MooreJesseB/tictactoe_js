@@ -13,7 +13,11 @@ window.onload = function(event){
   var player = playerX;
   var taken = "taken";
   var turnCounter = 0;
-  // var aiMode = true;
+  var lockGame = false;
+  
+  // ai stuff
+  var aiMode = false;
+
 
   winConditions = [
     ["one", "two", "three"],
@@ -26,16 +30,14 @@ window.onload = function(event){
     ["seven", "five", "three"]
   ];
 
-  lockGame = false;
-
   var resetButton = document.getElementById("reset");
+  var aiButton = document.getElementById("ai");
 
   // let player know who's turn it is
   var whosTurn = function() {
     element = document.getElementById("turn");
     element.innerHTML = "It is Player " + player.text + "'s turn.";
   };
-
   whosTurn();
 
   // toggle player
@@ -46,46 +48,80 @@ window.onload = function(event){
     else {
       player = playerX;
     }
-  }
+  };
 
-  // click listener
+  // AI box picker
+  var aiPicker = function() {
+    freeArr = [];
+    var boxes = document.getElementsByClassName("square");
+    console.log(boxes);
+    for (var i = boxes.length - 1; i >= 0; i--) {
+      classList = boxes[i].className.split(" ");
+      for (var j = 0; j < classList.length; j++) {
+        if (classList[j] !== taken && j === classList.length - 1) {
+            freeArr.push(boxes[i]);
+        }
+      };
+    };
+    randomBox = freeArr[Math.floor(Math.random()*freeArr.length)];
+    console.log(randomBox);
+    markBox(randomBox);
+  };
+
+  // click event handler
   var setClickOnBox = function(id) {
     var box = document.getElementById(id);
     console.log(box);
     box.onclick = function() {
-      if (lockGame) {
+      console.log("button clicked!");
+      if (lockGame || (aiMode && player === playerO)) {
+        console.log("Early return");
         return;
       }
-      // check for box already clicked
-      var classList = box.className.split(" ");
-      for (var i = 0; i < classList.length; i++) {
-        if (classList[i] === taken) {
-          return;
-        }
-      };
 
-      // set up clicked box
-      box.classList.add(player.className);
-      box.innerHTML = player.text;
-      box.classList.add(taken);
-      turnCounter++;
-
-      // check if a player has won
-      if (turnCounter >= 4) {
-        if (checkForWin()){
-          return;
-        }
+      if (!aiMode || aiMode && player === playerX) {
+        // check for box already clicked
+        var classList = box.className.split(" ");
+        for (var i = 0; i < classList.length; i++) {
+          if (classList[i] === taken) {
+            console.log("already taken");
+            return;
+          }
+        };
+        markBox(box);
       }
 
-      // check for draw
-      if (turnCounter === 9) {
-        alert("The game is a draw!");
-        lockGame = true;
-      };
-
-      togglePlayer();
-      whosTurn();
+      // check for AI turn
+      if (aiMode && player === playerO) {
+        console.log("inside AI picker");
+        window.setTimeout(aiPicker(), 1500);  
+      }
     };
+  };
+
+  var markBox = function(box) {
+    box.classList.add(player.className);
+    box.innerHTML = player.text;
+    box.classList.add(taken);
+    turnCounter++;
+
+    // check if a player has won
+    if (turnCounter >= 4) {
+      if (checkForWin()) {
+        return;
+      }
+    }
+
+    // check for draw
+    if (turnCounter === 9) {
+      alert("The game is a draw!");
+      lockGame = true;
+      return;
+    };
+
+    // switch player
+    togglePlayer();
+    whosTurn(); 
   };
 
   // is there a better way to check for this without so many nested loops?
@@ -108,8 +144,24 @@ window.onload = function(event){
     };
   };
 
+  // toggle AI Mode
+  aiButton.onclick = function() {
+    if (aiMode) {
+      aiButton.innerHTML = "AI off!"
+    }
+    else {
+      aiButton.innerHTML = "AI on!"
+    }
+    aiMode = !aiMode;
+    resetNow();
+  };
+
   // reset the game
-  resetButton.onclick = function(event) {
+  resetButton.onclick = function() {
+    resetNow();
+  };
+
+  var resetNow = function() {
     var boxes = document.getElementsByClassName("square");
     console.log(boxes);
     console.log(boxes[0]);
@@ -124,8 +176,7 @@ window.onload = function(event){
       whosTurn();
     };
   };
-
-  // initialize listeners
+  // initialize event handlers
   setClickOnBox("one");
   setClickOnBox("two");
   setClickOnBox("three");
