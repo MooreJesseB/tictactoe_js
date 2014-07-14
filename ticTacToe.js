@@ -1,6 +1,6 @@
 window.onload = function(event){
 
-  // declarations
+  // isnitiaize
   var playerX = { 
     className: "player-x",
     text: "X",
@@ -50,6 +50,26 @@ window.onload = function(event){
     }
   };
 
+  // is there a better way to check for this without so many nested loops?
+  var checkForWin = function() {
+    classList = document.getElementsByClassName(player.className);
+    for (var i = 0; i < winConditions.length; i++) {
+      for (var j = 0, counter = 0; j < winConditions[i].length; j++) {
+        for (var k = 0; k < classList.length; k++) {
+          console.log(classList);
+          if (classList[k].id === winConditions[i][j]) {
+            counter++;
+            if (counter === 3) {
+              alert("Player " + player.text + " has won!");
+              lockGame = true;
+              return true;
+            }
+          }
+        };
+      };
+    };
+  };
+
   // AI box picker
   var aiPicker = function() {
     freeArr = [];
@@ -67,6 +87,33 @@ window.onload = function(event){
     console.log(randomBox);
     markBox(randomBox);
   };
+
+  // mark the box and check conditions
+  var markBox = function(box) {
+    box.classList.add(player.className);
+    box.innerHTML = player.text;
+    box.classList.add(taken);
+    turnCounter++;
+
+    // check if a player has won
+    if (turnCounter >= 4) {
+      if (checkForWin()) {
+        return;
+      }
+    }
+
+    // check for draw
+    if (turnCounter === 9) {
+      alert("The game is a draw!");
+      lockGame = true;
+      return;
+    };
+
+    // switch player
+    togglePlayer();
+    whosTurn(); 
+  };
+
 
   // click event handler
   var setClickOnBox = function(id) {
@@ -94,57 +141,12 @@ window.onload = function(event){
       // check for AI turn
       if (aiMode && player === playerO) {
         console.log("inside AI picker");
-        window.setTimeout(aiPicker(), 1500);  
+        window.setTimeout(aiPicker, 1000);  
       }
     };
   };
 
-  var markBox = function(box) {
-    box.classList.add(player.className);
-    box.innerHTML = player.text;
-    box.classList.add(taken);
-    turnCounter++;
-
-    // check if a player has won
-    if (turnCounter >= 4) {
-      if (checkForWin()) {
-        return;
-      }
-    }
-
-    // check for draw
-    if (turnCounter === 9) {
-      alert("The game is a draw!");
-      lockGame = true;
-      return;
-    };
-
-    // switch player
-    togglePlayer();
-    whosTurn(); 
-  };
-
-  // is there a better way to check for this without so many nested loops?
-  var checkForWin = function() {
-    classList = document.getElementsByClassName(player.className);
-    for (var i = 0; i < winConditions.length; i++) {
-      for (var j = 0, counter = 0; j < winConditions[i].length; j++) {
-        for (var k = 0; k < classList.length; k++) {
-          console.log(classList);
-          if (classList[k].id === winConditions[i][j]) {
-            counter++;
-            if (counter === 3) {
-              alert("Player " + player.text + " has won!");
-              lockGame = true;
-              return true;
-            }
-          }
-        };
-      };
-    };
-  };
-
-  // toggle AI Mode
+    // toggle AI Mode
   aiButton.onclick = function() {
     if (aiMode) {
       aiButton.innerHTML = "AI off!"
@@ -161,6 +163,7 @@ window.onload = function(event){
     resetNow();
   };
 
+  // reset board
   var resetNow = function() {
     var boxes = document.getElementsByClassName("square");
     console.log(boxes);
@@ -176,7 +179,8 @@ window.onload = function(event){
       whosTurn();
     };
   };
-  // initialize event handlers
+
+  // enable event handlers
   setClickOnBox("one");
   setClickOnBox("two");
   setClickOnBox("three");
